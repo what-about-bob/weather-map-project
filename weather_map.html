@@ -5,12 +5,12 @@
     <title>weather map api</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
           integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-<style>
-    body{
-        font-size:20px;
-        text-weight:bold
-    }
-</style>
+    <style>
+        body{
+            font-size:20px;
+            text-weight:bold
+        }
+    </style>
 
 </head>
 <body class="container bg-info">
@@ -20,19 +20,19 @@
     <div class="col">City Name</div>
 </div>
 
-   <!--//row for three day weather;-->
-    <div class="row">
-<!--//first column-->
-        <div class="col card border ml-2" id="day1" >
-            <div id="highlow1"></div>
-            <div id="icons1"></div>
-            <div id="clouds1"></div>
-            <div id="humidity1"></div>
-            <div id="wind1"></div>
-            <div id="pressure1"></div>
+<!--//row for three day weather;-->
+<div class="row">
+    <!--//first column-->
+    <div class="col card border ml-2" id="day1" >
+        <div id="highlow1"></div>
+        <div id="icons1"></div>
+        <div id="clouds1"></div>
+        <div id="humidity1"></div>
+        <div id="wind1"></div>
+        <div id="pressure1"></div>
 
 
-<!--//second column-->
+        <!--//second column-->
 
     </div>
     <div class="col card border ml-2">
@@ -45,7 +45,7 @@
 
     </div>
 
-<!--//third column-->
+    <!--//third column-->
     <div class="col card border ml-2 ">
         <div id="highlow3"></div>
         <div id="icons3"></div>
@@ -59,7 +59,7 @@
 </div>
 
 <!--//row for map from mapbox-->
-<div class="row">
+<div class="row" id="map" style="width: 600px; height: 600px;">
 
 
 </div>
@@ -67,51 +67,52 @@
         integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
         crossorigin="anonymous"></script>
 <script src="keys.js"></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
 <script>
     "use strict";
-  // var iconImg =  [
-  //       {
-  //           "condition": "clear-day",
-  //           "icon":"icons/SVG/Sun.svg"
-  //       },
-  //       {
-  //           "condition": "clear-night",
-  //           "icon":"icons/SVG/Moon.svg"
-  //       },
-  //       {
-  //           "condition": "rain",
-  //           "icon":"icons/SVG/Cloud-Rain.svg"
-  //       },
-  //       {
-  //           "condition": "snow",
-  //           "icon":"icons/SVG/Cloud-Snow.svg"
-  //       },
-  //       {
-  //           "condition": "sleet",
-  //           "icon":"icons/SVG/Snowflake.svg"
-  //       },
-  //       {
-  //           "condition": "wind",
-  //           "icon":"icons/SVG/Wind.svg"
-  //       },
-  //       {
-  //           "condition": "fog",
-  //           "icon":"icons/SVG/Cloud-Fog-Alt.svg"
-  //       },
-  //       {
-  //           "condition": "cloudy",
-  //           "icon":"icons/SVG/Cloud.svg"
-  //       },
-  //       {
-  //           "condition": "partly-cloudy-day",
-  //           "icon": "icons/SVG/Cloud-Sun.svg"
-  //       },
-  //       {
-  //           "condition": "partly-coudy-night",
-  //           "icon":"icons/SVG/Cloud-Moon.svg"
-  //       }
-  //
-  //   ]
+    // var iconImg =  [
+    //       {
+    //           "condition": "clear-day",
+    //           "icon":"icons/SVG/Sun.svg"
+    //       },
+    //       {
+    //           "condition": "clear-night",
+    //           "icon":"icons/SVG/Moon.svg"
+    //       },
+    //       {
+    //           "condition": "rain",
+    //           "icon":"icons/SVG/Cloud-Rain.svg"
+    //       },
+    //       {
+    //           "condition": "snow",
+    //           "icon":"icons/SVG/Cloud-Snow.svg"
+    //       },
+    //       {
+    //           "condition": "sleet",
+    //           "icon":"icons/SVG/Snowflake.svg"
+    //       },
+    //       {
+    //           "condition": "wind",
+    //           "icon":"icons/SVG/Wind.svg"
+    //       },
+    //       {
+    //           "condition": "fog",
+    //           "icon":"icons/SVG/Cloud-Fog-Alt.svg"
+    //       },
+    //       {
+    //           "condition": "cloudy",
+    //           "icon":"icons/SVG/Cloud.svg"
+    //       },
+    //       {
+    //           "condition": "partly-cloudy-day",
+    //           "icon": "icons/SVG/Cloud-Sun.svg"
+    //       },
+    //       {
+    //           "condition": "partly-coudy-night",
+    //           "icon":"icons/SVG/Cloud-Moon.svg"
+    //       }
+    //
+    //   ]
 
     (function(){
         var sanAntonio = '29.426827,-98.489615';
@@ -121,126 +122,110 @@
 
 
 
+        sanAntonioWeather.done(function (weather) {
+            // function icons(){
+            //     if(iconImg[8].condition === "partly-cloudy-day"){
+            //             $('#icon1').prepand("iconImg[8].icon)
+            //     }
+            //
+            // }
 
-
-
-
-
-            sanAntonioWeather.done(function (weather) {
-
-
-                function dayOneWeather() {
-                    ///Day 1 High / Low
-                    var dayOneHigh = weather.daily.data[0].apparentTemperatureHigh;
-                    var dayOneLow = weather.daily.data[0].apparentTemperatureLow;
-                    var dayOneHighLow = dayOneHigh + " / " + dayOneLow;
-                    $('#highlow1').html(dayOneHighLow);
-
-                    response.done(function(data1){
-
-
-                        for(var i=0;i<3;i++){
-                            for (var j=0;j<data1.length;j++){
-                                if(weather.daily.data[i].icon === data1[j].condition){
-                                    $('#icons1').html('<img src =' + data1[j].icon +'>')
-
-                                }
+            function dayOneWeather() {
+                ///Day 1 High / Low
+                var dayOneHigh = weather.daily.data[0].apparentTemperatureHigh;
+                var dayOneLow = weather.daily.data[0].apparentTemperatureLow;
+                var dayOneHighLow = dayOneHigh + " / " + dayOneLow;
+                $('#highlow1').html(dayOneHighLow);
+                //Day 1 Icons
+                response.done(function(data1){
+                    for(var i=0;i<3;i++){
+                        for (var j=0;j<data1.length;j++){
+                            if(weather.daily.data[i].icon === data1[j].condition){
+                                $('#icons1').html('<img src =' + data1[j].icon +'>')
                             }
                         }
+                    }
+                });
+                //Day 1 Clouds
+                var dayOneSummary = weather.daily.data[0].icon;
+                $('#clouds1').html('Clouds: ' + dayOneSummary);
+                //Day 1 Humidity
+                var dayOneHumidity = weather.daily.data[0].humidity;
+                $('#humidity1').html("Humidity: " + dayOneHumidity);
+                //Day 1 Wind
+                var dayOneWind = weather.daily.data[0].windSpeed;
+                $('#wind1').html("Wind: " + dayOneWind);
+                //Day 1 Pressure
+                var dayOnePressure = weather.daily.data[0].pressure;
+                $('#pressure1').html("Pressure: " + dayOnePressure);
+            }
 
-                    });
-
-
-
-                    //Day 1 Clouds
-                    var dayOneSummary = weather.daily.data[0].icon;
-                    $('#clouds1').html('Clouds: ' + dayOneSummary);
-                    //Day 1 Humidity
-                    var dayOneHumidity = weather.daily.data[0].humidity;
-                    $('#humidity1').html("Humidity: " + dayOneHumidity);
-                    //Day 1 Wind
-                    var dayOneWind = weather.daily.data[0].windSpeed;
-                    $('#wind1').html("Wind: " + dayOneWind);
-                    //Day 1 Pressure
-                    var dayOnePressure = weather.daily.data[0].pressure;
-                    $('#pressure1').html("Pressure: " + dayOnePressure);
-                }
-
-                function dayTwoWeather() {
-                    var dayTwoHigh = weather.daily.data[1].apparentTemperatureHigh;
-                    var dayTwoLow = weather.daily.data[1].apparentTemperatureLow;
-                    var dayTwoHighLow = dayTwoHigh + " / " + dayTwoLow;
-                    $('#highlow2').html(dayTwoHighLow);
-                    //day 2 icons
-                    response.done(function(data1) {
-
-
-                            for (var j = 0; j < data1.length; j++) {
-                                if (weather.daily.data[1].icon === data1[j].condition) {
-                                    $('#icons2').html('<img src =' + data1[j].icon + '>')
-
-                                }
-                            }
-
-                    });
-
-
-                    //Day 2 Clouds
-                    var dayTwoSummary = weather.daily.data[1].icon;
-                    $('#clouds2').html('Clouds: ' + dayTwoSummary);
-                    //Day 2 Humidity
-                    var dayTwoHumidity = weather.daily.data[1].humidity;
-                    $('#humidity2').html("Humidity: " + dayTwoHumidity);
-                    //Day 2 Wind
-                    var dayTwoWind = weather.daily.data[1].windSpeed;
-                    $('#wind2').html("Wind: " + dayTwoWind);
-                    //Day 2 Pressure
-                    var dayTwoPressure = weather.daily.data[1].pressure;
-                    $('#pressure2').html("Pressure: " + dayTwoPressure);
-
-                }
-                function dayThreeWeather() {
-                    var dayThreeHigh = weather.daily.data[2].apparentTemperatureHigh;
-                    var dayThreeLow = weather.daily.data[2].apparentTemperatureLow;
-                    var dayThreeHighLow = dayThreeHigh + " / " + dayThreeLow;
-                    $('#highlow3').html(dayThreeHighLow);
-                    //day 3 icons
-                    response.done(function(data1) {
-
-
-                        for (var j = 0; j < data1.length; j++) {
-                            if (weather.daily.data[2].icon === data1[j].condition) {
-                                $('#icons3').html('<img src =' + data1[j].icon + '>')
-
-                            }
+            function dayTwoWeather() {
+                var dayTwoHigh = weather.daily.data[1].apparentTemperatureHigh;
+                var dayTwoLow = weather.daily.data[1].apparentTemperatureLow;
+                var dayTwoHighLow = dayTwoHigh + " / " + dayTwoLow;
+                $('#highlow2').html(dayTwoHighLow);
+                //Day 2 Icons
+                response.done(function(data1){
+                    for (var j = 0; j < data1.length; j++) {
+                        if (weather.daily.data[1].icon === data1[j].condition) {
+                            $('#icons2').html('<img src =' + data1[j].icon + '>')
                         }
+                    }
+                });
+                //Day 2 Clouds
+                var dayTwoSummary = weather.daily.data[1].icon;
+                $('#clouds2').html('Clouds: ' + dayTwoSummary);
+                //Day 2 Humidity
+                var dayTwoHumidity = weather.daily.data[1].humidity;
+                $('#humidity2').html("Humidity: " + dayTwoHumidity);
+                //Day 2 Wind
+                var dayTwoWind = weather.daily.data[1].windSpeed;
+                $('#wind2').html("Wind: " + dayTwoWind);
+                //Day 2 Pressure
+                var dayTwoPressure = weather.daily.data[1].pressure;
+                $('#pressure2').html("Pressure: " + dayTwoPressure);
 
-                    });
+            }
+            function dayThreeWeather() {
+                var dayThreeHigh = weather.daily.data[2].apparentTemperatureHigh;
+                var dayThreeLow = weather.daily.data[2].apparentTemperatureLow;
+                var dayThreeHighLow = dayThreeHigh + " / " + dayThreeLow;
+                $('#highlow3').html(dayThreeHighLow);
+                //Day 3 Icons
+                response.done(function(data1){
+                    for (var j = 0; j < data1.length; j++) {
+                        if (weather.daily.data[2].icon === data1[j].condition) {
+                            $('#icons3').html('<img src =' + data1[j].icon + '>')
+                        }
+                    }
+                });
+                //Day 3 Clouds
+                var dayThreeSummary = weather.daily.data[2].icon;
+                $('#clouds3').html('Clouds: ' + dayThreeSummary);
+                //Day 3 Humidity
+                var dayThreeHumidity = weather.daily.data[2].humidity;
+                $('#humidity3').html("Humidity: " + dayThreeHumidity);
+                //Day 3 Wind
+                var dayThreeWind = weather.daily.data[2].windSpeed;
+                $('#wind3').html("Wind: " + dayThreeWind);
+                //Day 3 Pressure
+                var dayThreePressure = weather.daily.data[2].pressure;
+                $('#pressure3').html("Pressure: " + dayThreePressure);
 
-                    //Day 3 Clouds
-                    var dayThreeSummary = weather.daily.data[2].icon;
-                    $('#clouds3').html('Clouds: ' + dayThreeSummary);
-                    //Day 3 Humidity
-                    var dayThreeHumidity = weather.daily.data[2].humidity;
-                    $('#humidity3').html("Humidity: " + dayThreeHumidity);
-                    //Day 3 Wind
-                    var dayThreeWind = weather.daily.data[2].windSpeed;
-                    $('#wind3').html("Wind: " + dayThreeWind);
-                    //Day 3 Pressure
-                    var dayThreePressure = weather.daily.data[2].pressure;
-                    $('#pressure3').html("Pressure: " + dayThreePressure);
-
-                }
-                dayOneWeather();
-                dayTwoWeather();
-                dayThreeWeather();
-console.log("it works");
-
-            });
+            }
+            dayOneWeather();
+            dayTwoWeather();
+            dayThreeWeather();
+        });
 
 
-
-
+        mapboxgl.accessToken = myMapBoxKey;
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v9',
+            zoom: 1
+        });
 
 
 
