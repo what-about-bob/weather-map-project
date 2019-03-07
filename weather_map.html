@@ -5,10 +5,15 @@
     <title>weather map api</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
           integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-
+<style>
+    body{
+        font-size:20px;
+        text-weight:bold
+    }
+</style>
 
 </head>
-<body class="container">
+<body class="container bg-info">
 <h1 class="mt-3">Weather Application</h1>
 <!--//row for city's name heading-->
 <div class="row">
@@ -18,36 +23,36 @@
    <!--//row for three day weather;-->
     <div class="row">
 <!--//first column-->
-        <div class="col" id="day0" >
-            <div id="highlow0"></div>
-            <div id="icons0"></div>
-            <div id="clouds0"></div>
-            <div id="humidity0"></div>
-            <div id="wind0"></div>
-            <div id="pressure0"></div>
+        <div class="col card border ml-2" id="day1" >
+            <div id="highlow1"></div>
+            <div id="icons1"></div>
+            <div id="clouds1"></div>
+            <div id="humidity1"></div>
+            <div id="wind1"></div>
+            <div id="pressure1"></div>
 
 
 <!--//second column-->
 
     </div>
-    <div class="col ">
-        <div id="high/low1"></div>
-        <div id="icons1"></div>
-        <div id="clouds1"></div>
-        <div id="humidity1"></div>
-        <div id="wind1"></div>
-        <div id="pressure1"></div>
-
-    </div>
-
-<!--//third column-->
-    <div class="col ">
-        <div id="high/low2"></div>
+    <div class="col card border ml-2">
+        <div id="highlow2"></div>
         <div id="icons2"></div>
         <div id="clouds2"></div>
         <div id="humidity2"></div>
         <div id="wind2"></div>
         <div id="pressure2"></div>
+
+    </div>
+
+<!--//third column-->
+    <div class="col card border ml-2 ">
+        <div id="highlow3"></div>
+        <div id="icons3"></div>
+        <div id="clouds3"></div>
+        <div id="humidity3"></div>
+        <div id="wind3"></div>
+        <div id="pressure3"></div>
 
     </div>
 
@@ -70,43 +75,91 @@
         var sanAntonio = '29.426827,-98.489615';
         var houston = '';
         var sanAntonioWeather = $.ajax('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkSkyToken + '/29.426827,-98.489615');
+        var response=$.ajax("weather.json");
 
 
-        sanAntonioWeather.done(function (data1) {
-            var dayOneHigh = data1.daily.data[0].apparentTemperatureHigh;
-            var dayOneLow = data1.daily.data[0].apparentTemperatureLow;
-            var day0HighLow = "Today's High " + dayOneHigh +"/ Today's Low "+ dayOneLow;
-            console.log(data1);
 
-        });
 
 
             sanAntonioWeather.done(function (weather) {
-                ///Day 0 High / Low
-                var dayOneHigh = weather.daily.data[0].apparentTemperatureHigh;
-                var dayOneLow = weather.daily.data[0].apparentTemperatureLow;
-                var day0HighLow = dayOneHigh + " / " + dayOneLow;
-                $('#highlow0').html(day0HighLow);
-                //Day 0 Clouds
-                var dayOneSummary = weather.daily.data[0].icon;
-                $('#clouds0').html('Clouds: ' + dayOneSummary);
-                //Day 0 Humidity
-                var dayOneHumidity = weather.daily.data[0].humidity;
-                $('#humidity0').html("Humidity: " + dayOneHumidity);
-                //Day 0 Wind
-                var dayOneWind = weather.daily.data[0].windSpeed;
-                $('#wind0').html("Wind: " + dayOneWind);
-                //Day 0 Pressure
-                var dayOnePressure = weather.daily.data[0].pressure;
-                $('#pressure0').html("Pressure: " + dayOnePressure);
+                function dayOneWeather() {
+                    ///Day 1 High / Low
+                    var dayOneHigh = weather.daily.data[0].apparentTemperatureHigh;
+                    var dayOneLow = weather.daily.data[0].apparentTemperatureLow;
+                    var dayOneHighLow = dayOneHigh + " / " + dayOneLow;
+                    $('#highlow1').html(dayOneHighLow);
+                    //day 1 icons
+                    response.done(function(data1){
+                        // if(weather.daily.data[0].icon==="partly-cloudy-day"){
+                            $("#icon1").append("hi");
+                        // }
+                         console.log(data1);
+                    });
+
+
+                    //Day 1 Clouds
+                    var dayOneSummary = weather.daily.data[0].icon;
+                    $('#clouds1').html('Clouds: ' + dayOneSummary);
+                    //Day 1 Humidity
+                    var dayOneHumidity = weather.daily.data[0].humidity;
+                    $('#humidity1').html("Humidity: " + dayOneHumidity);
+                    //Day 1 Wind
+                    var dayOneWind = weather.daily.data[0].windSpeed;
+                    $('#wind1').html("Wind: " + dayOneWind);
+                    //Day 1 Pressure
+                    var dayOnePressure = weather.daily.data[0].pressure;
+                    $('#pressure1').html("Pressure: " + dayOnePressure);
+                }
+
+                function dayTwoWeather() {
+                    var dayTwoHigh = weather.daily.data[1].apparentTemperatureHigh;
+                    var dayTwoLow = weather.daily.data[1].apparentTemperatureLow;
+                    var dayTwoHighLow = dayTwoHigh + " / " + dayTwoLow;
+                    $('#highlow2').html(dayTwoHighLow);
+                    //Day 2 Clouds
+                    var dayTwoSummary = weather.daily.data[1].icon;
+                    $('#clouds2').html('Clouds: ' + dayTwoSummary);
+                    //Day 2 Humidity
+                    var dayTwoHumidity = weather.daily.data[1].humidity;
+                    $('#humidity2').html("Humidity: " + dayTwoHumidity);
+                    //Day 2 Wind
+                    var dayTwoWind = weather.daily.data[1].windSpeed;
+                    $('#wind2').html("Wind: " + dayTwoWind);
+                    //Day 2 Pressure
+                    var dayTwoPressure = weather.daily.data[1].pressure;
+                    $('#pressure2').html("Pressure: " + dayTwoPressure);
+
+                }
+                function dayThreeWeather() {
+                    var dayThreeHigh = weather.daily.data[2].apparentTemperatureHigh;
+                    var dayThreeLow = weather.daily.data[2].apparentTemperatureLow;
+                    var dayThreeHighLow = dayThreeHigh + " / " + dayThreeLow;
+                    $('#highlow3').html(dayThreeHighLow);
+                    //Day 3 Clouds
+                    var dayThreeSummary = weather.daily.data[2].icon;
+                    $('#clouds3').html('Clouds: ' + dayThreeSummary);
+                    //Day 3 Humidity
+                    var dayThreeHumidity = weather.daily.data[2].humidity;
+                    $('#humidity3').html("Humidity: " + dayThreeHumidity);
+                    //Day 3 Wind
+                    var dayThreeWind = weather.daily.data[2].windSpeed;
+                    $('#wind3').html("Wind: " + dayThreeWind);
+                    //Day 3 Pressure
+                    var dayThreePressure = weather.daily.data[2].pressure;
+                    $('#pressure3').html("Pressure: " + dayThreePressure);
+
+                }
+                dayOneWeather();
+                dayTwoWeather();
+                dayThreeWeather();
+
+
             });
 
 
 
 
-
-
-
+        console.log($('#icons1').html());
 
 
 
