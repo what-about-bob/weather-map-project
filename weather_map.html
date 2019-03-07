@@ -127,12 +127,7 @@
 
 
             sanAntonioWeather.done(function (weather) {
-                // function icons(){
-                //     if(iconImg[8].condition === "partly-cloudy-day"){
-                //             $('#icon1').prepand("iconImg[8].icon)
-                //     }
-                //
-                // }
+
 
                 function dayOneWeather() {
                     ///Day 1 High / Low
@@ -140,24 +135,17 @@
                     var dayOneLow = weather.daily.data[0].apparentTemperatureLow;
                     var dayOneHighLow = dayOneHigh + " / " + dayOneLow;
                     $('#highlow1').html(dayOneHighLow);
-                    //day 1 icons
-                    // response.done(function(data1){
-                    //     // if(weather.daily.data[0].icon==="partly-cloudy-day"){
-                    //         $("#icon1").append("hi");
-                    //     // }
-                    //      $('#icons1').;
-                    // });
-                    // icons();
+
                     response.done(function(data1){
 
-                        if (weather.daily.data[0].icon === "partly-cloudy-day") {
-                            $('#icons1').html('<img src=' + data1[8].icon + '>')
-                        }
-                         if(weather.daily.data[1].icon === "cloudy"){
-                            $('#icons2').html('<img src='+data1[7].icon +'>')
-                        }
-                        if(weather.daily.data[2].icon === "partly-cloudy-day"){
-                            $('#icons3').html('<img src='+data1[8].icon +'>')
+
+                        for(var i=0;i<3;i++){
+                            for (var j=0;j<data1.length;j++){
+                                if(weather.daily.data[i].icon === data1[j].condition){
+                                    $('#icons1').html('<img src =' + data1[j].icon +'>')
+
+                                }
+                            }
                         }
 
                     });
@@ -183,6 +171,20 @@
                     var dayTwoLow = weather.daily.data[1].apparentTemperatureLow;
                     var dayTwoHighLow = dayTwoHigh + " / " + dayTwoLow;
                     $('#highlow2').html(dayTwoHighLow);
+                    //day 2 icons
+                    response.done(function(data1) {
+
+
+                            for (var j = 0; j < data1.length; j++) {
+                                if (weather.daily.data[1].icon === data1[j].condition) {
+                                    $('#icons2').html('<img src =' + data1[j].icon + '>')
+
+                                }
+                            }
+
+                    });
+
+
                     //Day 2 Clouds
                     var dayTwoSummary = weather.daily.data[1].icon;
                     $('#clouds2').html('Clouds: ' + dayTwoSummary);
@@ -202,6 +204,19 @@
                     var dayThreeLow = weather.daily.data[2].apparentTemperatureLow;
                     var dayThreeHighLow = dayThreeHigh + " / " + dayThreeLow;
                     $('#highlow3').html(dayThreeHighLow);
+                    //day 3 icons
+                    response.done(function(data1) {
+
+
+                        for (var j = 0; j < data1.length; j++) {
+                            if (weather.daily.data[2].icon === data1[j].condition) {
+                                $('#icons3').html('<img src =' + data1[j].icon + '>')
+
+                            }
+                        }
+
+                    });
+
                     //Day 3 Clouds
                     var dayThreeSummary = weather.daily.data[2].icon;
                     $('#clouds3').html('Clouds: ' + dayThreeSummary);
@@ -226,7 +241,6 @@
 
 
 
-        // console.log($('#icons1').html());
 
 
 
