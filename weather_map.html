@@ -18,10 +18,10 @@
    <!--//row for three day weather;-->
     <div class="row">
 <!--//first column-->
-        <div class="col" >
-            <div id="high/low0"></div>
+        <div class="col" id="day0" >
+            <div id="highlow0"></div>
             <div id="icons0"></div>
-            <div id=="clouds0"></div>
+            <div id="clouds0"></div>
             <div id="humidity0"></div>
             <div id="wind0"></div>
             <div id="pressure0"></div>
@@ -61,14 +61,48 @@
 <script src="https://code.jquery.com/jquery-3.3.1.js"
         integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
         crossorigin="anonymous"></script>
+<script src="keys.js"></script>
 <script>
     "use strict";
 
 
     (function(){
+        var sanAntonio = '29.426827,-98.489615';
+        var houston = '';
+        var sanAntonioWeather = $.ajax('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkSkyToken + '/29.426827,-98.489615');
 
 
-        console.log("it works");
+        sanAntonioWeather.done(function (data1) {
+            var dayOneHigh = data1.daily.data[0].apparentTemperatureHigh;
+            var dayOneLow = data1.daily.data[0].apparentTemperatureLow;
+            var day0HighLow = "Today's High " + dayOneHigh +"/ Today's Low "+ dayOneLow;
+            console.log(data1);
+
+        });
+
+
+            sanAntonioWeather.done(function (weather) {
+                ///Day 0 High / Low
+                var dayOneHigh = weather.daily.data[0].apparentTemperatureHigh;
+                var dayOneLow = weather.daily.data[0].apparentTemperatureLow;
+                var day0HighLow = dayOneHigh + " / " + dayOneLow;
+                $('#highlow0').html(day0HighLow);
+                //Day 0 Clouds
+                var dayOneSummary = weather.daily.data[0].icon;
+                $('#clouds0').html('Clouds: ' + dayOneSummary);
+                //Day 0 Humidity
+                var dayOneHumidity = weather.daily.data[0].humidity;
+                $('#humidity0').html("Humidity: " + dayOneHumidity);
+                //Day 0 Wind
+                var dayOneWind = weather.daily.data[0].windSpeed;
+                $('#wind0').html("Wind: " + dayOneWind);
+                //Day 0 Pressure
+                var dayOnePressure = weather.daily.data[0].pressure;
+                $('#pressure0').html("Pressure: " + dayOnePressure);
+            });
+
+
+
 
 
 
