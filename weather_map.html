@@ -69,7 +69,49 @@
 <script src="keys.js"></script>
 <script>
     "use strict";
+  var iconImg =  [
+        {
+            "condition": "clear-day",
+            "icon":"icons/SVG/Sun.svg"
+        },
+        {
+            "condition": "clear-night",
+            "icon":"icons/SVG/Moon.svg"
+        },
+        {
+            "condition": "rain",
+            "icon":"icons/SVG/Cloud-Rain.svg"
+        },
+        {
+            "condition": "snow",
+            "icon":"icons/SVG/Cloud-Snow.svg"
+        },
+        {
+            "condition": "sleet",
+            "icon":"icons/SVG/Snowflake.svg"
+        },
+        {
+            "condition": "wind",
+            "icon":"icons/SVG/Wind.svg"
+        },
+        {
+            "condition": "fog",
+            "icon":"icons/SVG/Cloud-Fog-Alt.svg"
+        },
+        {
+            "condition": "cloudy",
+            "icon":"icons/SVG/Cloud.svg"
+        },
+        {
+            "condition": "partly-cloudy-day",
+            "icon": icons/SVG/Cloud-Sun.svg
+        },
+        {
+            "condition": "partly-coudy-night",
+            "icon":"icons/SVG/Cloud-Moon.svg"
+        }
 
+    ]
 
     (function(){
         var sanAntonio = '29.426827,-98.489615';
@@ -82,6 +124,13 @@
 
 
             sanAntonioWeather.done(function (weather) {
+                function icons(){
+                    if(iconImg[8].condition === "partly-cloudy-day"){
+                            $('#icon1').html(iconImg[8].icon)
+                    }
+
+                }
+
                 function dayOneWeather() {
                     ///Day 1 High / Low
                     var dayOneHigh = weather.daily.data[0].apparentTemperatureHigh;
@@ -89,12 +138,14 @@
                     var dayOneHighLow = dayOneHigh + " / " + dayOneLow;
                     $('#highlow1').html(dayOneHighLow);
                     //day 1 icons
-                    response.done(function(data1){
-                        // if(weather.daily.data[0].icon==="partly-cloudy-day"){
-                            $("#icon1").append("hi");
-                        // }
-                         console.log(data1);
-                    });
+                    // response.done(function(data1){
+                    //     // if(weather.daily.data[0].icon==="partly-cloudy-day"){
+                    //         $("#icon1").append("hi");
+                    //     // }
+                    //      console.log(data1);
+                    // });
+                    icons();
+
 
 
                     //Day 1 Clouds
