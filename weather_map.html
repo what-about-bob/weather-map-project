@@ -10,6 +10,26 @@
             font-size:20px;
             text-weight:bold
         }
+
+
+        #map{
+            height:600px;
+            width:600px;
+        }
+
+        .coordinates {
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding:5px 10px;
+            margin: 0;
+            font-size: 11px;
+            line-height: 18px;
+            border-radius: 3px;
+            display: none;
+        }
     </style>
 
 </head>
@@ -59,10 +79,14 @@
 </div>
 
 <!--//row for map from mapbox-->
-<div class="row" id="map" style="width: 600px; height: 600px;">
+<div class="row mt-3" >
+    <div class="col" id="map"></div>
+
+    <pre id='coordinates' class='coordinates'></pre>
 
 
 </div>
+
 <script src="https://code.jquery.com/jquery-3.3.1.js"
         integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
         crossorigin="anonymous"></script>
@@ -70,65 +94,124 @@
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
 <script>
     "use strict";
-    // var iconImg =  [
-    //       {
-    //           "condition": "clear-day",
-    //           "icon":"icons/SVG/Sun.svg"
-    //       },
-    //       {
-    //           "condition": "clear-night",
-    //           "icon":"icons/SVG/Moon.svg"
-    //       },
-    //       {
-    //           "condition": "rain",
-    //           "icon":"icons/SVG/Cloud-Rain.svg"
-    //       },
-    //       {
-    //           "condition": "snow",
-    //           "icon":"icons/SVG/Cloud-Snow.svg"
-    //       },
-    //       {
-    //           "condition": "sleet",
-    //           "icon":"icons/SVG/Snowflake.svg"
-    //       },
-    //       {
-    //           "condition": "wind",
-    //           "icon":"icons/SVG/Wind.svg"
-    //       },
-    //       {
-    //           "condition": "fog",
-    //           "icon":"icons/SVG/Cloud-Fog-Alt.svg"
-    //       },
-    //       {
-    //           "condition": "cloudy",
-    //           "icon":"icons/SVG/Cloud.svg"
-    //       },
-    //       {
-    //           "condition": "partly-cloudy-day",
-    //           "icon": "icons/SVG/Cloud-Sun.svg"
-    //       },
-    //       {
-    //           "condition": "partly-coudy-night",
-    //           "icon":"icons/SVG/Cloud-Moon.svg"
-    //       }
-    //
-    //   ]
 
-    (function(){
+    (function() {
         var sanAntonio = '29.426827,-98.489615';
         var houston = '';
-        var sanAntonioWeather = $.ajax('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkSkyToken + '/29.426827,-98.489615');
-        var response=$.ajax("weather.json");
+        var sanAntonioWeather = $.ajax('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkSkyToken + '/29.426827,-98.4896');
+        var response = $.ajax("weather.json");
 
 
 
+
+        //second part
+
+
+        mapboxgl.accessToken = mapBoxToken;
+        var coordinates = document.getElementById('coordinates');
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v9',
+            zoom: 1
+        });
+
+        var canvas = map.getCanvasContainer();
+
+        var geojson = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [0, 0]
+                }
+            }]
+        };
+
+
+        function onMove(e) {
+            var coords = e.lngLat;
+
+// Set a UI indicator for dragging.
+            canvas.style.cursor = 'grabbing';
+
+// Update the Point feature in `geojson` coordinates
+// and call setData to the source layer `point` on it.
+            geojson.features[0].geometry.coordinates = [coords.lng, coords.lat];
+            map.getSource('point').setData(geojson);
+            console.log(geojson.features[0].geometry.coordinates);
+            var arrayToString=(geojson.features[0].geometry.coordinates).reverse().join(',');
+            console.log(arrayToString);
+
+        }
+
+        function onUp(e) {
+            var coords = e.lngLat;
+
+// Print the coordinates of where the point had
+// finished being dragged to on the map.
+            coordinates.style.display = 'block';
+            coordinates.innerHTML = 'Longitude: ' + coords.lng + '<br />Latitude: ' + coords.lat;
+            canvas.style.cursor = '';
+
+
+// Unbind mouse/touch events
+            map.off('mousemove', onMove);
+            map.off('touchmove', onMove);
+        }
+
+
+        map.on('load', function() {
+
+// Add a single point to the map
+            map.addSource('point', {
+                "type": "geojson",
+                "data": geojson
+            });
+
+            map.addLayer({
+                "id": "point",
+                "type": "circle",
+                "source": "point",
+                "paint": {
+                    "circle-radius": 10,
+                    "circle-color": "#3887be"
+                }
+            });
+
+// When the cursor enters a feature in the point layer, prepare for dragging.
+            map.on('mouseenter', 'point', function() {
+                map.setPaintProperty('point', 'circle-color', '#3bb2d0');
+                canvas.style.cursor = 'move';
+            });
+
+            map.on('mouseleave', 'point', function() {
+                map.setPaintProperty('point', 'circle-color', '#3887be');
+                canvas.style.cursor = '';
+            });
+
+            map.on('mousedown', 'point', function(e) {
+// Prevent the default map drag behavior.
+                e.preventDefault();
+
+                canvas.style.cursor = 'grab';
+
+                map.on('mousemove', onMove);
+                map.once('mouseup', onUp);
+            });
+
+            map.on('touchstart', 'point', function(e) {
+                if (e.points.length !== 1) return;
+
+// Prevent the default map drag behavior.
+                e.preventDefault();
+
+                map.on('touchmove', onMove);
+                map.once('touchend', onUp);
+            });
+        });
         sanAntonioWeather.done(function (weather) {
-            // function icons(){
-            //     if(iconImg[8].condition === "partly-cloudy-day"){
-            //             $('#icon1').prepand("iconImg[8].icon)
-            //     }
-            //
-            // }
+
 
             function dayOneWeather() {
                 ///Day 1 High / Low
@@ -137,11 +220,11 @@
                 var dayOneHighLow = dayOneHigh + " / " + dayOneLow;
                 $('#highlow1').html(dayOneHighLow);
                 //Day 1 Icons
-                response.done(function(data1){
-                    for(var i=0;i<3;i++){
-                        for (var j=0;j<data1.length;j++){
-                            if(weather.daily.data[i].icon === data1[j].condition){
-                                $('#icons1').html('<img src =' + data1[j].icon +'>')
+                response.done(function (data1) {
+                    for (var i = 0; i < 3; i++) {
+                        for (var j = 0; j < data1.length; j++) {
+                            if (weather.daily.data[i].icon === data1[j].condition) {
+                                $('#icons1').html('<img src =' + data1[j].icon + '>')
                             }
                         }
                     }
@@ -166,7 +249,7 @@
                 var dayTwoHighLow = dayTwoHigh + " / " + dayTwoLow;
                 $('#highlow2').html(dayTwoHighLow);
                 //Day 2 Icons
-                response.done(function(data1){
+                response.done(function (data1) {
                     for (var j = 0; j < data1.length; j++) {
                         if (weather.daily.data[1].icon === data1[j].condition) {
                             $('#icons2').html('<img src =' + data1[j].icon + '>')
@@ -187,13 +270,14 @@
                 $('#pressure2').html("Pressure: " + dayTwoPressure);
 
             }
+
             function dayThreeWeather() {
                 var dayThreeHigh = weather.daily.data[2].apparentTemperatureHigh;
                 var dayThreeLow = weather.daily.data[2].apparentTemperatureLow;
                 var dayThreeHighLow = dayThreeHigh + " / " + dayThreeLow;
                 $('#highlow3').html(dayThreeHighLow);
                 //Day 3 Icons
-                response.done(function(data1){
+                response.done(function (data1) {
                     for (var j = 0; j < data1.length; j++) {
                         if (weather.daily.data[2].icon === data1[j].condition) {
                             $('#icons3').html('<img src =' + data1[j].icon + '>')
@@ -214,28 +298,13 @@
                 $('#pressure3').html("Pressure: " + dayThreePressure);
 
             }
+
             dayOneWeather();
             dayTwoWeather();
             dayThreeWeather();
+
+
         });
-
-
-        mapboxgl.accessToken = myMapBoxKey;
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v9',
-            zoom: 1
-        });
-
-
-
-
-
-
-
-
-
-
 
 
 
